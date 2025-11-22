@@ -1,8 +1,7 @@
-import { MercadoPago } from "mercadopago";
+import mercadopago from "mercadopago";
 
-const mp = new MercadoPago(process.env.MP_ACCESS_TOKEN, {
-  locale: "pt-BR"
-});
+// Configura o token (versão 2.x)
+mercadopago.configurations.setAccessToken(process.env.MP_ACCESS_TOKEN);
 
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end();
@@ -25,7 +24,7 @@ export default async function handler(req, res) {
       notification_url: "https://webeconomic.onrender.com/webhook",
     };
 
-    const result = await mp.preferences.create(preference); // <- aqui, usar mp
+    const result = await mercadopago.preferences.create(preference);
 
     return res.status(200).json({ init_point: result.body.init_point });
   } catch (err) {
