@@ -10,7 +10,8 @@ export default async function handler(req, res) {
   try {
     const { uid, plano, valor } = req.body;
 
-    if (!uid  !plano  !valor)
+    // ✅ Correção da verificação
+    if (!uid || !plano || !valor)
       return res.status(400).json({ error: "Dados insuficientes" });
 
     if (!process.env.MP_ACCESS_TOKEN)
@@ -19,12 +20,12 @@ export default async function handler(req, res) {
     const preference = {
       items: [
         {
-          title: Plano ${plano},
+          title: `Plano ${plano}`, // ✅ template string
           quantity: 1,
           unit_price: Number(valor),
         },
       ],
-      external_reference: ${uid}|${plano},
+      external_reference: `${uid}|${plano}`, // ✅ template string
       notification_url: "https://webeconomic.onrender.com/webhook",
     };
 
