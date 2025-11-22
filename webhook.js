@@ -1,13 +1,15 @@
-import mercadopago from "mercadopago";
+import MercadoPago from "mercadopago";
 import admin from "firebase-admin";
 
+// Inicializa Firebase Admin
 if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert(JSON.parse(process.env.FIREBASE_ADMIN)),
   });
 }
 
-mercadopago.configure({
+// Cria instância do Mercado Pago com access token
+const mercadopago = new MercadoPago({
   access_token: process.env.MP_ACCESS_TOKEN,
 });
 
@@ -15,6 +17,7 @@ export default async function handler(req, res) {
   try {
     const data = req.body;
 
+    // Ignora notificações que não sejam de pagamento
     if (data.type !== "payment") {
       return res.status(200).send("ignored");
     }
