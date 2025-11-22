@@ -25,7 +25,7 @@ export default async function handler(req, res) {
       notification_url: "https://webeconomic.onrender.com/webhook",
     };
 
-    const result = await mercadopago.preferences.create(preference);
+    const result = await mp.preferences.create(preference); // <- aqui, usar mp
 
     return res.status(200).json({ init_point: result.body.init_point });
   } catch (err) {
