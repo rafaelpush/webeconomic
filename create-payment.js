@@ -1,5 +1,6 @@
 import mercadopago from "mercadopago";
 
+// Cria pagamento compatível v2.x
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end();
 
@@ -8,11 +9,6 @@ export default async function handler(req, res) {
 
     if (!uid || !plano || !valor)
       return res.status(400).json({ error: "Dados insuficientes" });
-
-    // Cria instância do MercadoPago compatível com v2.x
-    const mp = new mercadopago(process.env.MP_ACCESS_TOKEN, {
-      locale: "pt-BR",
-    });
 
     const preference = {
       items: [
@@ -23,10 +19,13 @@ export default async function handler(req, res) {
         },
       ],
       external_reference: `${uid}|${plano}`,
-      notification_url: "https://webeconomic.onrender.com/webhook",
+      notification_url: "https://webeconomic-1fy7.onrender.com/webhook", // Substitua pelo seu domínio
     };
 
-    const result = await mp.preferences.create(preference);
+    // Chamada compatível v2.x passando access_token
+    const result = await mercadopago.preferences.create(preference, {
+      access_token: process.env.MP_ACCESS_TOKEN,
+    });
 
     return res.status(200).json({ init_point: result.body.init_point });
   } catch (err) {
