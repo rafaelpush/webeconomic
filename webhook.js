@@ -8,31 +8,34 @@ if (!admin.apps.length) {
   });
 }
 
-// Configura token do MercadoPago (versão 2.x)
-mercadopago.configurations.setAccessToken(process.env.MP_ACCESS_TOKEN);
-
 export default async function handler(req, res) {
   try {
     const data = req.body;
 
-    // Ignora eventos que não sejam pagamento
     if (data.type !== "payment") return res.status(200).send("ignored");
 
     const paymentId = data.data.id;
-    const info = await mercadopago.payment.findById(paymentId);
+
+    // Buscar pagamento passando o access_token na chamada
+    const info = await mercadopago.payment.findById(paymentId, {
+      access_token: process.env.MP_ACCESS_TOKEN,
+    });
+
     const payment = info.body;
 
     if (payment.status === "approved") {
       const [uid, plano] = payment.external_reference.split("|");
-      await admin.firestore().collection("users").doc(uid).set(
-        { plan: plano },
-        { merge: true }
-      );
+
+      await admin
+        .firestore()
+        .collection("users")
+        .doc(uid)
+        .set({ plan: plano }, { merge: true });
     }
 
     res.status(200).send("ok");
   } catch (err) {
-    console.error(err);
+    console.error("Erro webhook:", err);
     res.status(500).send("erro");
   }
 }
