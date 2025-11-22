@@ -1,6 +1,8 @@
-import mercadopago from "mercadopago";
+import { MercadoPago } from "mercadopago";
 
-mercadopago.configurations.setAccessToken(process.env.MP_ACCESS_TOKEN);
+const mp = new MercadoPago(process.env.MP_ACCESS_TOKEN, {
+  locale: "pt-BR"
+});
 
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end();
