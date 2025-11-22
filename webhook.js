@@ -16,11 +16,13 @@ export default async function handler(req, res) {
 
     const paymentId = data.data.id;
 
-    // Buscar pagamento passando o access_token na chamada
-    const info = await mercadopago.payment.findById(paymentId, {
-      access_token: process.env.MP_ACCESS_TOKEN,
+    // Cria instância do MercadoPago compatível com v2.x
+    const mp = new mercadopago(process.env.MP_ACCESS_TOKEN, {
+      locale: "pt-BR",
     });
 
+    // Buscar pagamento usando a instância
+    const info = await mp.payment.findById(paymentId);
     const payment = info.body;
 
     if (payment.status === "approved") {
