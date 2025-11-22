@@ -1,10 +1,14 @@
 import mercadopago from "mercadopago";
 import admin from "firebase-admin";
 
-// Inicializa Firebase Admin
+// Ler Firebase Admin da variável de ambiente (base64 safe)
 if (!admin.apps.length) {
+  const firebaseAdmin = JSON.parse(
+    Buffer.from(process.env.FIREBASE_ADMIN, "base64").toString("utf-8")
+  );
+
   admin.initializeApp({
-    credential: admin.credential.cert(JSON.parse(process.env.FIREBASE_ADMIN)),
+    credential: admin.credential.cert(firebaseAdmin),
   });
 }
 
@@ -16,13 +20,11 @@ export default async function handler(req, res) {
 
     const paymentId = data.data.id;
 
-    // Cria instância do MercadoPago compatível com v2.x
-    const mp = new mercadopago(process.env.MP_ACCESS_TOKEN, {
-      locale: "pt-BR",
+    // Buscar pagamento passando o access_token na chamada
+    const info = await mercadopago.payment.findById(paymentId, {
+      access_token: process.env.MP_ACCESS_TOKEN,
     });
 
-    // Buscar pagamento usando a instância
-    const info = await mp.payment.findById(paymentId);
     const payment = info.body;
 
     if (payment.status === "approved") {
