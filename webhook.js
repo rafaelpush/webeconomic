@@ -1,4 +1,4 @@
-import mercadopago from "mercadopago";
+import { MercadoPago } from "mercadopago";
 import admin from "firebase-admin";
 
 if (!admin.apps.length) {
@@ -7,8 +7,10 @@ if (!admin.apps.length) {
   });
 }
 
-// Alteração aqui para versão 2.x
-mercadopago.configurations.setAccessToken(process.env.MP_ACCESS_TOKEN);
+// Criar instância do MercadoPago com token
+const mp = new MercadoPago(process.env.MP_ACCESS_TOKEN, {
+  locale: "pt-BR",
+});
 
 export default async function handler(req, res) {
   try {
@@ -17,7 +19,7 @@ export default async function handler(req, res) {
     if (data.type !== "payment") return res.status(200).send("ignored");
 
     const paymentId = data.data.id;
-    const info = await mercadopago.payment.findById(paymentId);
+    const info = await mp.payment.findById(paymentId);
     const payment = info.body;
 
     if (payment.status === "approved") {
