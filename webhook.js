@@ -7,9 +7,8 @@ if (!admin.apps.length) {
   });
 }
 
-mercadopago.configure({
-  access_token: process.env.MP_ACCESS_TOKEN,
-});
+// Alteração aqui para versão 2.x
+mercadopago.configurations.setAccessToken(process.env.MP_ACCESS_TOKEN);
 
 export default async function handler(req, res) {
   try {
