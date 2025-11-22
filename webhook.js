@@ -1,31 +1,25 @@
-import MercadoPago from "mercadopago";
+import mercadopago from "mercadopago";
 import admin from "firebase-admin";
 
-// Inicializa Firebase Admin
 if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert(JSON.parse(process.env.FIREBASE_ADMIN)),
   });
 }
 
-// Cria instância do Mercado Pago com access token
-const mercadopago = new MercadoPago({
-  access_token: process.env.MP_ACCESS_TOKEN,
-});
+// Configura token
+mercadopago.configurations.setAccessToken(process.env.MP_ACCESS_TOKEN);
 
 export default async function handler(req, res) {
   try {
     const data = req.body;
 
-    // Ignora notificações que não sejam de pagamento
-    if (data.type !== "payment") {
-      return res.status(200).send("ignored");
-    }
+    if (data.type !== "payment") return res.status(200).send("ignored");
 
     const paymentId = data.data.id;
-    const info = await mercadopago.payment.findById(paymentId);
+    const info = await mercadopago.payment.get(paymentId); // use get() em vez de findById()
 
-    const payment = info.body;
+    const payment = info.response;
 
     if (payment.status === "approved") {
       const [uid, plano] = payment.external_reference.split("|");
