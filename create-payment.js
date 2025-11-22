@@ -1,7 +1,7 @@
-import mercadopago from "mercadopago";
+import MercadoPago from "mercadopago";
 
-mercadopago.configure({
-  access_token: process.env.MP_ACCESS_TOKEN,
+const mercadopago = new MercadoPago({
+  access_token: process.env.MP_ACCESS_TOKEN
 });
 
 export default async function handler(req, res) {
@@ -10,22 +10,18 @@ export default async function handler(req, res) {
   try {
     const { uid, plano, valor } = req.body;
 
-    // ✅ Correção da verificação
     if (!uid || !plano || !valor)
       return res.status(400).json({ error: "Dados insuficientes" });
-
-    if (!process.env.MP_ACCESS_TOKEN)
-      return res.status(500).json({ error: "MP_ACCESS_TOKEN ausente" });
 
     const preference = {
       items: [
         {
-          title: `Plano ${plano}`, // ✅ template string
+          title: `Plano ${plano}`,
           quantity: 1,
           unit_price: Number(valor),
         },
       ],
-      external_reference: `${uid}|${plano}`, // ✅ template string
+      external_reference: `${uid}|${plano}`,
       notification_url: "https://webeconomic.onrender.com/webhook",
     };
 
