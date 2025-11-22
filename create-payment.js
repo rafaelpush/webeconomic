@@ -1,8 +1,7 @@
-import MercadoPago from "mercadopago";
+import mercadopago from "mercadopago";
 
-const mercadopago = new MercadoPago({
-  access_token: process.env.MP_ACCESS_TOKEN
-});
+// Configura token diretamente
+mercadopago.configurations.setAccessToken(process.env.MP_ACCESS_TOKEN);
 
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end();
@@ -27,7 +26,7 @@ export default async function handler(req, res) {
 
     const result = await mercadopago.preferences.create(preference);
 
-    return res.status(200).json({ init_point: result.body.init_point });
+    return res.status(200).json({ init_point: result.response.init_point });
   } catch (err) {
     console.error("Erro MercadoPago:", err);
     return res.status(500).json({ error: "Erro ao criar pagamento" });
