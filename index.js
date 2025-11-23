@@ -4,17 +4,12 @@ import createPayment from "./api/create-payment.js";
 import webhook from "./api/webhook.js";
 
 const app = express();
-
-// Middleware
 app.use(express.json());
-app.use(cors({
-  origin: "https://webeconomia.vercel.app/valores.html" // frontend hospedado na Vercel
-}));
+app.use(cors());
 
-// Rotas
-app.post("/create-payment", createPayment);
-app.post("/webhook", webhook);
+// Rotas reais
+app.post("/api/create-payment", createPayment);
+app.post("/api/webhook", webhook);
 
-// Start do servidor
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, () => console.log("Servidor rodando na porta " + PORT));
