@@ -2,6 +2,15 @@ import mercadopago from "mercadopago";
 
 // Rota para criar pagamento compatível com MercadoPago v2.x
 export default async function handler(req, res) {
+
+  // ===== CORS =====
+  res.setHeader("Access-Control-Allow-Origin", "https://webeconomia.vercel.app");
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  // Responde rapidamente ao preflight OPTIONS
+  if (req.method === "OPTIONS") return res.status(200).end();
+
   // Permitir apenas POST
   if (req.method !== "POST") return res.status(405).end();
 
@@ -23,10 +32,10 @@ export default async function handler(req, res) {
         },
       ],
       external_reference: `${uid}|${plano}`,
-      notification_url: "https://webeconomic-1fy7.onrender.com/api/webhook", // Seu domínio + /webhook
+      notification_url: "https://webeconomic-1fy7.onrender.com/api/webhook", // webhook
     };
 
-    // Cria a preferência usando v2.x passando o access_token
+    // Cria a preferência usando MercadoPago v2.x
     const result = await mercadopago.preferences.create(preference, {
       access_token: process.env.MP_ACCESS_TOKEN,
     });
