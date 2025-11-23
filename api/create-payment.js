@@ -23,7 +23,7 @@ export default async function handler(req, res) {
         },
       ],
       external_reference: `${uid}|${plano}`,
-      notification_url: "https://webeconomic-1fy7.onrender.com/webhook", // Seu domínio + /webhook
+      notification_url: "https://webeconomic-1fy7.onrender.com/api/webhook", // Seu domínio + /webhook
     };
 
     // Cria a preferência usando v2.x passando o access_token
