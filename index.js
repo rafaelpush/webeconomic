@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
-import createPayment from "./create-payment.js";
-import webhook from "./webhook.js";
+import createPayment from "./api/create-payment.js";
+import webhook from "./api/webhook.js";
 
 const app = express();
 
