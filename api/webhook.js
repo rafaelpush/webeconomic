@@ -3,7 +3,6 @@ import admin from "firebase-admin";
 
 // Inicializa Firebase Admin apenas uma vez
 if (!admin.apps.length) {
-  // Lê Firebase Admin da variável de ambiente (Base64 seguro)
   const firebaseAdmin = JSON.parse(
     Buffer.from(process.env.FIREBASE_ADMIN, "base64").toString("utf-8")
   );
@@ -14,11 +13,23 @@ if (!admin.apps.length) {
 }
 
 export default async function handler(req, res) {
+
+  // ===== CORS =====
+  res.setHeader("Access-Control-Allow-Origin", "*"); // permite chamadas externas se necessário
+  res.setHeader("Access-Control-Allow-Methods", "POST,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  // Resposta rápida ao preflight OPTIONS
+  if (req.method === "OPTIONS") return res.status(200).end();
+
+  // Apenas POST
+  if (req.method !== "POST") return res.status(405).end();
+
   try {
     const data = req.body;
 
-    // Ignorar eventos que não são pagamento
-    if (data.type !== "payment") return res.status(200).send("ignored");
+    // Ignora eventos que não sejam pagamento
+    if (!data || data.type !== "payment") return res.status(200).send("ignored");
 
     const paymentId = data.data.id;
 
