@@ -1,7 +1,7 @@
 import mercadopago from "mercadopago";
 
 // Rota para criar pagamento compatível com MercadoPago v2.x
-export default async function handler(req, res) {
+export default async function createPayment(req, res) {
 
   // ===== CORS =====
   res.setHeader("Access-Control-Allow-Origin", "https://webeconomia.vercel.app");
