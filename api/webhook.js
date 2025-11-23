@@ -12,7 +12,7 @@ if (!admin.apps.length) {
   });
 }
 
-export default async function handler(req, res) {
+export default async function webhook(req, res) {
 
   // ===== CORS =====
   res.setHeader("Access-Control-Allow-Origin", "*"); // permite chamadas externas se necessário
