@@ -1,11 +1,18 @@
 import express from "express";
 import cors from "cors";
-import fetch from "node-fetch";
+import fetch from "node-fetch"; // se Node >=18, pode usar global fetch
+import createPayment from "./api/create-payment.js";
+import webhook from "./api/webhook.js";
 
 const app = express();
-app.use(cors());
 app.use(express.json());
+app.use(cors());
 
+// 🔹 Rotas de pagamento
+app.post("/api/create-payment", createPayment);
+app.post("/api/webhook", webhook);
+
+// 🔹 Nova rota para o chat financeiro
 app.post("/api/finance", async (req, res) => {
   const { userId, saldo = 0, historico = [], message } = req.body;
 
@@ -44,6 +51,7 @@ Responda **apenas em JSON** no seguinte formato:
 
     const data = await response.json();
 
+    // tenta parsear JSON retornado pelo GPT
     let gptReply;
     try {
       gptReply = JSON.parse(data.choices[0].message.content);
