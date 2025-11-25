@@ -74,5 +74,7 @@ app.post("/api/finance", async (req, res) => {
   }
 });
 
+console.log("OpenAI Key:", process.env.OPENAI_KEY ? "OK" : "NÃO DEFINIDA");
+
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log("Servidor rodando na porta " + PORT));
