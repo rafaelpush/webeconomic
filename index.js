@@ -26,18 +26,18 @@ app.post("/api/finance", async (req, res) => {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "gpt-4",
-        messages: [
-          {
-            role: "system",
-            content: `Você é uma IA financeira que controla apenas a parte financeira do usuário.
-Você mantém saldo, histórico de transações, permite adicionar/remover dinheiro, fazer PIX, emitir alertas e sugestões de finanças.
-Responda apenas com instruções financeiras em JSON: { "reply": "...", "updated": true|false, "saldo": 0, "historico": [] }`
-          },
-          { role: "user", content: message }
-        ],
-        temperature: 0.3
-      })
+  model: "gpt-3.5-turbo", // trocar gpt-4 -> gpt-3.5-turbo
+  messages: [
+    {
+      role: "system",
+      content: `Você é uma IA financeira que controla apenas a parte financeira do usuário. 
+      Você mantém saldo, histórico de transações, permite adicionar/remover dinheiro, fazer PIX, emitir alertas e sugestões de finanças. 
+      Responda apenas com instruções financeiras.`
+    },
+    { role: "user", content: message }
+  ],
+  temperature: 0.3
+})
     });
 
     const data = await response.json();
