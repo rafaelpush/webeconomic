@@ -5,7 +5,7 @@ import express from "express";
 import cors from "cors";
 
 // importa a rota do validate-coupon
-import validateCouponRoute from "./validate-coupon.js"; // ajuste o caminho se necessário
+import validateCouponRoute from "./api/validate-coupon.js"; // ajuste o caminho se necessário
 
 const app = express();
 app.use(cors());
