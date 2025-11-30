@@ -18,7 +18,6 @@ import vincularRouter from "./api/vincular.js";
 // ROTAS
 // ===============================
 app.use("/api", vincularRouter);   // Google login + Discord OAuth
-app.use("/api", financeRouter);    // Chat financeiro
 
 // ===============================
 // PORTA DO SERVIDOR
