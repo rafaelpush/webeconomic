@@ -1,24 +1,16 @@
 import mercadopago from "mercadopago";
 import admin from "firebase-admin";
 
-// Inicializar Mercado Pago
-mercadopago.configure({
-  access_token: process.env.MP_ACCESS_TOKEN,
-});
+mercadopago.configure({ access_token: process.env.MP_ACCESS_TOKEN });
 
-// Inicializa Firebase Admin 1x
 if (!admin.apps.length) {
   const firebaseAdmin = JSON.parse(
     Buffer.from(process.env.FIREBASE_ADMIN, "base64").toString("utf-8")
   );
-
-  admin.initializeApp({
-    credential: admin.credential.cert(firebaseAdmin),
-  });
+  admin.initializeApp({ credential: admin.credential.cert(firebaseAdmin) });
 }
 
 export default async function webhook(req, res) {
-
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST,OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -29,11 +21,10 @@ export default async function webhook(req, res) {
   try {
     const data = req.body;
 
-    if (!data || data.type !== "payment")
+    if (!data || !["payment", "payment.updated"].includes(data.type))
       return res.status(200).send("ignored");
 
     const paymentId = data.data.id;
-
     const info = await mercadopago.payment.findById(paymentId);
     const payment = info.body;
 
