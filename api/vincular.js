@@ -9,11 +9,17 @@ const router = express.Router();
 // =======================================
 // Firebase Admin
 // =======================================
-if (!admin.apps.length) {
-  const serviceAccount = JSON.parse(
-    fs.readFileSync("./serviceAccountKey.json", "utf8")
-  );
+let serviceAccount;
 
+// tenta pegar do env (Render)
+if (process.env.FIREBASE_KEY_JSON) {
+  serviceAccount = JSON.parse(process.env.FIREBASE_KEY_JSON);
+} else {
+  // fallback local
+  serviceAccount = JSON.parse(fs.readFileSync("./serviceAccountKey.json", "utf8"));
+}
+
+if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
   });
