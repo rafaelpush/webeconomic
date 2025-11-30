@@ -1,12 +1,12 @@
 import express from "express";
 import cors from "cors";
-import discordRouter from "./api/discord.js";
+import vincularRouter from "./api/vincular.js";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use("/api", discordRouter);   
+app.use("/api", vincularRouter);
 
 app.get("/", (req, res) => {
   res.send("API WebEconomia ativa!");
