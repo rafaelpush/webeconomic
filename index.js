@@ -6,7 +6,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use("/api", vincularRouter);
+// --- AGORA A ROTA BASE É /api/vincular ---
+app.use("/api/vincular", vincularRouter);
 
 app.get("/", (req, res) => {
   res.send("API WebEconomia ativa!");
